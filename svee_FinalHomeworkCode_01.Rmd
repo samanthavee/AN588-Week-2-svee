@@ -1,0 +1,167 @@
+---
+title: "Final Homework Code"
+author: "Sam Vee"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: cosmo
+---
+# **3 ways that peer commentary helped**
+
+1. Good feedback lets me know that I'm on the right track! I will continue making comments like this for future assignments. <br><br>
+2. Re: Challenge 1 - I named my variables v1 and v2 to represent my first and second attempts. I can see how these would be more redundant if I was working on something bigger or more complex. The only thing I did was change the name of v1.1 to v1 in the last line of code for my first attempt's chunk, updating the variable to v1.1 seemed redundant. But moving forward, I will be more mindful of how I name my variables, especially when the code becomes more involved/complex. <br><br>
+3. Re: Challenge 4 - I agree that printing the lists for Haplorhines and Strepsirrhines makes the output
+in the knitted doc look a bit messy and cluttered. I followed Jimmy's suggestion and removed these lines of code and only printed the final `Primates` list.
+
+---
+# **Jimmy commentary**
+
+## Preliminaries
+
+Solid! Loading numerous libraries in one function is a solid application from the initial documentation. This is a personal preference, but I generally prefer to use numerous `library()` arguments so that if there are any hiccups with loading packages, I can pinpoint the line compiling failed. But, this is just how my brain works I think.
+
+## Challenge 1
+
+Good job finding `str_split_1()`! This greatly simplifies our procedure and eliminates the necessity of an `unlist()` function. I will say in actual practice that variable names like `v1` or `v2` can be a bit meaningless and unclear. There's a lot of boring theory behind variable naming conventions but I generally keep it related to the variable being described. 
+
+## Challenge 2 and 3
+
+Nice comments! Makes it clear what's going on and as far as I can tell your takes on what's going on is correct.
+
+## Challenge 4
+
+Good job nesting these lists! Just to make the knit a bit cleaner, I'd personally only print the final `Primates` list but again personal preference.
+
+## Challenge 5
+
+Right on! It's clear what's going on with the code, and your comments are excellent. I also see you used the semicolon method to print out a variable (I honestly earned this from a comp stat prof and it expanded my mind).
+
+# **Challenges faced**
+
+1. For Challenge 1, I had a hard time figuring out how to extract every third element from the vector.
+    + See comments and solution underneath
+2. At first, I had a hard time interpreting the output of the matrix and figuring out where the outputted elements of the matrix were coming from
+    + Re-reading module, referencing Ch3 in Book of R, comparing original matrix to extracted elements all helped me figure this out
+3. For Challenge 4, I initially forgot to name the lists after making them so the output didn't look like the example for Strepsirhini
+    + Looked fine after I added that in
+
+# **Preliminaries**
+Set working directory and load library
+```{r preliminaries}
+#load required packages
+library(stringr, yaml)
+```
+
+# **Challenge 1**
+First, create a vector of 1, word character strings comprising the first line of the novel Ulysses, by James Joyce: “Stately, plump Buck Mulligan came from the stairhead, bearing a bowl of lather on which a mirror and a razor lay crossed.” Then, extract every third element of this vector.
+
+## First attempt
+```{r challenge 1 attempt 1}
+#this makes entire sentence one character 
+v1 <- "Stately, plump Buck Mulligan came from the stairhead, bearing a bowl of lather on which a mirror and a razor lay crossed."; v1 
+
+#remove punctuation
+v1<- gsub("[[:punct:]]","",v1); v1 
+
+#creates list containing character vectors
+v1 <- str_split(v1, " "); v1
+
+#this isn't doing anything, try again sam!
+v1[seq(from = 1, to = length(v1), by = 3)]
+```
+
+## Second attempt
+Using str_split_1 function instead of str_split <br>
+* `str_split` takes character vector and returns a list <br>
+* `str_split_1` takes single string and returns a character vector <br>
+* I think my first attempt didn't work because i turned the character vector into a list before trying to extract every third element
+```{r challenge 1 attempt 2}
+# this creates a single string from the sentence
+v2 <- "Stately, plump Buck Mulligan came from the stairhead, bearing a bowl of lather on which a mirror and a razor lay crossed."; v2
+
+v2 <- gsub("[[:punct:]]","",v2); v2
+
+#this splits the string up into character vectors
+v2 <- str_split_1(v2, " "); v2
+
+# this extracts every third character vector
+v2[seq(from = 1, to = length(v2), by = 3)]
+```
+
+# **Challenge 2**
+```{r challenge 2}
+m <- matrix(data = 1:80, nrow =8, ncol = 10, byrow = FALSE); m
+x <- m[4,5]; x #extract element in row 4, column 5 and assign to new variable x
+
+#extract 2nd, 3rd, 6th COLUMNS and assign to new variable x
+x <- m[, c(2,3,6)]; x
+
+#extract 6th to 8th ROW and assign to new variable x
+x <- m[6:8, ]; x
+
+#extract elements from [row 2, column 2] to [row 6, column 9] and assign to new variable x
+x <- m[2:6, 2:9]; x
+```
+
+# **Challenge 3**
+Construct a 4-dimensional, 400 element array (5 x 5 x 4 x 4) named a consisting of the numbers 400 to 1 (i.e., a descending series)
+```{r challenge 3a}
+a <- array(data = 400:1, dim = c(5,5,4,4)); a #outputs 16 matrices
+```
+Given this matrix, what would the following return:
+```{r challenge3b}
+# comes from row 1 and column 1 (1,1) of matrix (1,2)
+a[1,1,1,2]
+
+# extracting elements from row 2 and column 3 (2,3) of matrices (2, 1:4)
+a[2,3,2,]
+
+# returns elements from rows and columns 1:5, aka all elements of (3,3) matrix
+a[1:5, 1:5, 3, 3]
+```
+
+# **Challenge 4**
+Create a list representing this simplified primate taxonomy:
+``` {r challenge 4}
+# list for strepsirrhines, already provided
+Lemuroidea <- c("Cheirogaleidae", "Lepilemuridae", "Indriidae", "Lemuridae", "Daubentoniidae")
+Lorisoidea <- c("Lorisidae", "Galagidae")
+Strepsirhini <- list(Lemuroidea, Lorisoidea) #nesting within streps
+  names(Strepsirhini) <- list("Lemuroidea", "Lorisoidea") #naming the list
+
+# making lists for haplorhines
+Platyrrhini <- c("Cebidae", "Atelidae", "Pitheciidae")
+Catarrhini <- c("Cercopithecidae", "Hylobatidae", "Hominidae")
+Tarsioidea <- c("Tarsiidae")
+
+# nesting and namining lists for haplorhines
+Anthropoidea <- list(Platyrrhini, Catarrhini)
+  names(Anthropoidea) <- list("Platyrrhini", "Catarrhini")
+Haplorhini <- list(Anthropoidea, Tarsioidea)
+  names(Haplorhini) <- list("Anthropoidea", "Tarsioidea")
+
+# making final list for all primates
+Primates <- list(Haplorhini, Strepsirhini)
+  names(Primates) <- list("Haplorhini", "Strepsirhini")
+Primates
+```
+
+# **Challenge 5**
+```{r challenge 5a}
+# storing these numbers into a 5x3 matrix that's filled in row-wise
+m3 <- matrix(data=c(3, 0, 1 ,23, 1, 2, 33, 1, 1, 42, 0, 1, 41, 0, 2), nrow=5, ncol=3, byrow=TRUE); m3
+
+# coerce matrix to data frame, can view data frame in output to see names of columns
+m3_df <- data.frame(m3); m3_df 
+
+# coerce second column to be logical-valued
+m3_df$X2 <- as.logical(m3_df$X2) 
+
+# coerce third column to be factor-valued
+m3_df$X3 <- as.factor(m3_df$X3) 
+
+# this command shows data type for each variable in data frame!
+str(m3_df) 
+```
